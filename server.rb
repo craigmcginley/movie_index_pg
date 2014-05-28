@@ -13,16 +13,26 @@ def db_connection
   end
 end
 
-def get_movie_data(sql, id=nil)
+def get_data_all(sql)
   db_connection do |conn|
-    conn.exec(sql)
+    conn.exec_params(sql)
   end
+end
+
+def get_data_singular(sql, id=nil)
+  db_connection do |conn|
+    conn.exec_params(sql, [id])
+  end
+end
+
+get '/' do
+  erb :index
 end
 
 
 get '/actors' do
   sql = 'SELECT name, id FROM actors;'
-  results = get_movie_data(sql)
+  results = get_data_all(sql)
 
   @all_actors = results.to_a
 
@@ -35,9 +45,9 @@ get '/actors/:id' do
                 FROM cast_members
                   JOIN movies ON cast_members.movie_id = movies.id
                   JOIN actors ON cast_members.actor_id = actors.id
-                WHERE actors.id = #{id};"
+                WHERE actors.id = $1;"
 
-  results = get_movie_data(sql, id)
+  results = get_data_singular(sql, id)
 
   @actor = results.to_a
 
@@ -51,7 +61,7 @@ get '/movies' do
             JOIN genres ON movies.genre_id = genres.id
           ORDER BY title ASC;'
 
-  results = get_movie_data(sql)
+  results = get_data_all(sql)
 
   @all_movies = results.to_a
 
@@ -64,17 +74,17 @@ get '/movies/:id' do
                 FROM cast_members
                   JOIN movies ON cast_members.movie_id = movies.id
                   JOIN actors ON cast_members.actor_id = actors.id
-                WHERE movies.id = #{id};"
+                WHERE movies.id = $1;"
 
-  results = get_movie_data(sql, id)
+  results = get_data_singular(sql, id)
   @actors = results.to_a
 
   sql = "SELECT movies.title, movies.year, movies.rating, genres.name AS genre, studios.name AS studios
           FROM movies
             LEFT OUTER JOIN studios ON movies.studio_id = studios.id
             JOIN genres ON movies.genre_id = genres.id
-          WHERE movies.id = #{id};"
-  results = get_movie_data(sql, id)
+          WHERE movies.id = $1;"
+  results = get_data_singular(sql, id)
   @movie = results.to_a
 
   erb :'movies/show'
