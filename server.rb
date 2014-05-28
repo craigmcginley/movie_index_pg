@@ -76,7 +76,6 @@ get '/movies/:id' do
           WHERE movies.id = #{id};"
   results = get_movie_data(sql, id)
   @movie = results.to_a
-  binding.pry
 
   erb :'movies/show'
 end
