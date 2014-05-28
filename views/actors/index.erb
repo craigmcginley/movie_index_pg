@@ -6,3 +6,10 @@
     </li>
   <% end %>
 </ul>
+
+<% if @page_number != 1 %>
+  <a href="/actors?page=<%= @page_number - 1 %>">Back</a>
+<% end %>
+<% if @page_number != @last_page %>
+  <a href="/actors?page=<%= @page_number + 1 %>">Next</a>
+<% end %>

@@ -1,8 +1,33 @@
 <h2>Movies</h2>
-<ul>
-  <% @all_movies.each do |movie| %>
-    <li>
-      <a href="/movies/<%= movie["movie_id"] %>"><%= movie["title"] %></a>
-    </li>
-  <% end %>
-</ul>
+Order by: <a href="/movies?order=title">Title</a>
+          <a href="/movies?order=year">Year</a>
+          <a href="/movies?order=rating">Rating</a>
+
+<table class="display">
+  <thead>
+    <tr>
+      <th id="title">Title</th>
+      <th>Year</th>
+      <th>Rating</th>
+      <th>Genre</th>
+      <th>Studio</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @all_movies.each do |movie| %>
+    <tr>
+        <td><a href="/movies/<%= movie["movie_id"] %>"><%= movie["title"] %></a></td>
+        <td><%= movie["year"] %></td>
+        <td><%= movie["rating"] %></td>
+        <td><%= movie["genre"] %></td>
+        <td><%= movie["studio"] %></td>
+    </tr>
+    <%end%>
+  </tbody>
+</table>
+<% if @page_number != 1 %>
+  <a href="/movies?order=<%= @order %>&page=<%= @page_number - 1 %>">Back</a>
+<% end %>
+<% if @page_number != @last_page %>
+<a href="/movies?order=<%= @order %>&page=<%= @page_number + 1 %>">Next</a>
+<% end %>

@@ -15,13 +15,13 @@ end
 
 def get_data_all(sql)
   db_connection do |conn|
-    conn.exec_params(sql)
+    conn.exec(sql)
   end
 end
 
-def get_data_singular(sql, id=nil)
+def get_data_singular(sql, param)
   db_connection do |conn|
-    conn.exec_params(sql, [id])
+    conn.exec_params(sql, [param])
   end
 end
 
@@ -31,10 +31,34 @@ end
 
 
 get '/actors' do
-  sql = 'SELECT name, id FROM actors;'
+  if params[:page] == nil
+    @page_number = 1
+  else
+    @page_number = params[:page].to_i
+  end
+
+  if @page_number == 1
+    offset = 0
+  else
+    offset = (@page_number - 1) * 20
+  end
+
+  sql = "SELECT name, id FROM actors
+          ORDER BY name
+          LIMIT 20 OFFSET #{offset};"
   results = get_data_all(sql)
 
   @all_actors = results.to_a
+
+  count = "SELECT COUNT(*) FROM actors;"
+  all_actors_count = get_data_all(count).to_a
+  all_actors_count = all_actors_count[0]["count"].to_i
+
+  if all_actors_count % 20 == 0
+    @last_page = all_actors_count / 20
+  else
+    @last_page = (all_actors_count / 20) + 1
+  end
 
   erb :'actors/index'
 end
@@ -55,15 +79,45 @@ get '/actors/:id' do
 end
 
 get '/movies' do
-  sql = 'SELECT movies.id AS movie_id, movies.title, movies.year, movies.rating, genres.name AS genre, studios.name AS studios
+  order_possibilities = ['title', 'year', 'rating']
+  if order_possibilities.include?(params[:order])
+    @order = params[:order]
+  else
+    @order = 'title'
+  end
+
+  if params[:page] == nil
+    @page_number = 1
+  else
+    @page_number = params[:page].to_i
+  end
+
+  if @page_number == 1
+    offset = 0
+  else
+    offset = (@page_number - 1) * 20
+  end
+
+  sql = "SELECT movies.id AS movie_id, movies.title AS title, movies.year AS year, movies.rating, genres.name AS genre, studios.name AS studio
           FROM movies
             LEFT OUTER JOIN studios ON movies.studio_id = studios.id
             JOIN genres ON movies.genre_id = genres.id
-          ORDER BY title ASC;'
+          ORDER BY #{@order} ASC
+          LIMIT 20 OFFSET #{offset}"
 
   results = get_data_all(sql)
 
   @all_movies = results.to_a
+
+  count = "SELECT COUNT(*) FROM movies;"
+  all_movies_count = get_data_all(count).to_a
+  all_movies_count = all_movies_count[0]["count"].to_i
+
+  if all_movies_count % 20 == 0
+    @last_page = all_movies_count / 20
+  else
+    @last_page = (all_movies_count / 20) + 1
+  end
 
   erb :'movies/index'
 end
@@ -79,7 +133,7 @@ get '/movies/:id' do
   results = get_data_singular(sql, id)
   @actors = results.to_a
 
-  sql = "SELECT movies.title, movies.year, movies.rating, genres.name AS genre, studios.name AS studios
+  sql = "SELECT movies.title, movies.year, movies.rating, genres.name AS genre, studios.name AS studio
           FROM movies
             LEFT OUTER JOIN studios ON movies.studio_id = studios.id
             JOIN genres ON movies.genre_id = genres.id
