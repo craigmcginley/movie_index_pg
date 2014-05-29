@@ -3,14 +3,14 @@
 <table class="display">
   <thead>
     <tr>
-      <th id="title"><a href="/movies?order=title">Title</a></th>
-      <th><a href="/movies?order=year">Year</th>
-      <th><a href="/movies?order=rating">Rating</th>
-      <th><a href="/movies?order=genre">Genre</th>
-      <th><a href="/movies?order=studio">Studio</th>
+      <th id="long"><a href="/movies?order=title">Title</a></th>
+      <th id="short"><a href="/movies?order=year">Year</th>
+      <th id="short"><a href="/movies?order=rating">Rating</th>
+      <th id="medium"><a href="/movies?order=genre">Genre</th>
+      <th id="medium"><a href="/movies?order=studio">Studio</th>
     </tr>
   </thead>
-  <tbody>
+  <tbody class="movies">
     <% @all_movies.each do |movie| %>
     <tr>
         <td><a href="/movies/<%= movie["movie_id"] %>"><%= movie["title"] %></a></td>

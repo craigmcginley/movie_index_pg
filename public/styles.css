@@ -2,11 +2,33 @@ body {
   background-color: pink;
 }
 
-.display > thead > tr > th {
-  padding: 0 20px 0 0;
-  text-align: left;
+.display {
+  border-collapse: collapse;
 }
 
-#title {
+.display > thead > tr > th {
+  border-bottom: solid 2px black;
+  text-align: center;
+  font-size: 14pt;
+}
+
+.movies > tr {
+  text-align: center;
+}
+
+.movies > tr > td {
+  border: solid 1px black;
+}
+
+#long {
+  width: 350px;
+}
+
+#medium {
   width: 250px;
+}
+
+#short {
+  width: 60px;
+  padding: none;
 }
