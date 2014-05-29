@@ -19,7 +19,7 @@ def get_data_all(sql)
   end
 end
 
-def get_data_singular(sql, param)
+def get_data_params(sql, param)
   db_connection do |conn|
     conn.exec_params(sql, [param])
   end
@@ -71,7 +71,7 @@ get '/actors/:id' do
                   JOIN actors ON cast_members.actor_id = actors.id
                 WHERE actors.id = $1;"
 
-  results = get_data_singular(sql, id)
+  results = get_data_params(sql, id)
 
   @actor = results.to_a
 
@@ -79,7 +79,7 @@ get '/actors/:id' do
 end
 
 get '/movies' do
-  order_possibilities = ['title', 'year', 'rating']
+  order_possibilities = ['title', 'year', 'rating', 'genre', 'studio']
   if order_possibilities.include?(params[:order])
     @order = params[:order]
   else
@@ -130,7 +130,7 @@ get '/movies/:id' do
                   JOIN actors ON cast_members.actor_id = actors.id
                 WHERE movies.id = $1;"
 
-  results = get_data_singular(sql, id)
+  results = get_data_params(sql, id)
   @actors = results.to_a
 
   sql = "SELECT movies.title, movies.year, movies.rating, genres.name AS genre, studios.name AS studio
@@ -138,7 +138,7 @@ get '/movies/:id' do
             LEFT OUTER JOIN studios ON movies.studio_id = studios.id
             JOIN genres ON movies.genre_id = genres.id
           WHERE movies.id = $1;"
-  results = get_data_singular(sql, id)
+  results = get_data_params(sql, id)
   @movie = results.to_a
 
   erb :'movies/show'

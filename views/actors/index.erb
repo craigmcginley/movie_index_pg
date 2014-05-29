@@ -7,9 +7,16 @@
   <% end %>
 </ul>
 
+<br>
+
 <% if @page_number != 1 %>
   <a href="/actors?page=<%= @page_number - 1 %>">Back</a>
 <% end %>
 <% if @page_number != @last_page %>
   <a href="/actors?page=<%= @page_number + 1 %>">Next</a>
 <% end %>
+
+<br>
+<br>
+
+<a href="/movies">Go to All Movies</a>

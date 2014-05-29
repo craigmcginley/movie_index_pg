@@ -1,5 +1,5 @@
 <h2><%= @actor[0]["name"] %></h2>
-<p> <%= @actor[0]["name"] %> appeared in: </p>
+<p> <%= @actor[0]["name"] %> appears in: </p>
 <ul>
   <% @actor.each do |movie| %>
     <li>
@@ -10,3 +10,9 @@
     </li>
   <% end %>
 </ul>
+
+<br>
+
+<a href="/movies">Go to All Movies</a>
+<br>
+<a href="/actors">Go to All Actors</a>

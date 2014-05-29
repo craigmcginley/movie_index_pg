@@ -1,16 +1,13 @@
 <h2>Movies</h2>
-Order by: <a href="/movies?order=title">Title</a>
-          <a href="/movies?order=year">Year</a>
-          <a href="/movies?order=rating">Rating</a>
 
 <table class="display">
   <thead>
     <tr>
-      <th id="title">Title</th>
-      <th>Year</th>
-      <th>Rating</th>
-      <th>Genre</th>
-      <th>Studio</th>
+      <th id="title"><a href="/movies?order=title">Title</a></th>
+      <th><a href="/movies?order=year">Year</th>
+      <th><a href="/movies?order=rating">Rating</th>
+      <th><a href="/movies?order=genre">Genre</th>
+      <th><a href="/movies?order=studio">Studio</th>
     </tr>
   </thead>
   <tbody>
@@ -25,9 +22,17 @@ Order by: <a href="/movies?order=title">Title</a>
     <%end%>
   </tbody>
 </table>
+
+<br>
+
 <% if @page_number != 1 %>
   <a href="/movies?order=<%= @order %>&page=<%= @page_number - 1 %>">Back</a>
 <% end %>
 <% if @page_number != @last_page %>
 <a href="/movies?order=<%= @order %>&page=<%= @page_number + 1 %>">Next</a>
 <% end %>
+
+<br>
+<br>
+
+<a href="/actors">Go to All Actors</a>
