@@ -1,0 +1,26 @@
+<h2>Search Results for "<%= @search %>"</h2>
+
+<table class="display">
+  <thead>
+    <tr>
+      <th id="long">Title</a></th>
+      <th id="short">Year</th>
+      <th id="short">Rating</th>
+    </tr>
+  </thead>
+  <tbody class="movies">
+    <% @results.each do |movie| %>
+    <tr>
+        <td><a href="/movies/<%= movie["id"] %>"><%= movie["title"] %></a></td>
+        <td><%= movie["year"] %></td>
+        <td><%= movie["rating"] %></td>
+    </tr>
+    <%end%>
+  </tbody>
+</table>
+
+<br>
+<br>
+<a href="/movies">Go to All Movies</a>
+<br>
+<a href="/actors">Go to All Actors</a>

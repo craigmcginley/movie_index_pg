@@ -25,6 +25,11 @@ def get_data_params(sql, param)
   end
 end
 
+def get_results(search)
+  sql = "SELECT * FROM movies WHERE to_tsvector(title || synopsis) @@ plainto_tsquery('#{search}')"
+  get_data_all(sql)
+end
+
 get '/' do
   erb :index
 end
@@ -143,3 +148,25 @@ get '/movies/:id' do
 
   erb :'movies/show'
 end
+
+get '/search_results/:search' do
+  @search = params[:search]
+  @results = get_results(@search)
+
+  erb :'search_results/show'
+end
+
+post '/search_results' do
+  search = params["search"]
+
+  redirect "/search_results/#{search}"
+end
+
+
+
+
+
+
+
+
+
